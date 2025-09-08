@@ -8,8 +8,8 @@ class ToyAdaptiveNode
     protected $inputArray = array();
     protected $inputSz = TAN_ERROR; // 3 means inputs 0, 1, 2
     protected $teachUse = USAGE_TEACH;
-    protected $forcedOutput = UNDEFINED_TXT;
-    protected $nextForcedOutput = UNDEFINED_TXT;
+    protected $output = UNDEFINED_TXT;
+    protected $cachedOutput = UNDEFINED_TXT;
 
     public function setNumberInputs($n) {
         if (!(is_int($n)))
@@ -45,9 +45,8 @@ class ToyAdaptiveNode
     public function getUsage() {
         if ($this->teachUse === USAGE_USE || $this->teachUse === USAGE_TEACH)
             return $this->teachUse;
-        else {
+        else
             return TAN_ERROR;
-        }
     }
 
     //
@@ -58,52 +57,64 @@ class ToyAdaptiveNode
     }
 
     //
-    // getF() is where one might expect neural processing to have happened. As
-    // that's not yet described, this routine is superseded in the testing
-    // class
+    // getF() is where one might expect neural processing to have happened.
     public function getF($example) {
         if ($this->getUsage() === USAGE_USE) {
-            if ($this->forcedOutput !== UNDEFINED_TXT)
-                return $this->forcedOutput;
+            if ($this->output !== UNDEFINED_TXT)
+                return $this->output;
             return $this->getUndefined();
         }
         return TAN_ERROR;
     }
 
     //
-    // For a special case of objects to add as common inputs to the network.
-    // This eases using address by reference later
+    // We use this special case of a TAN to hold an Overall Input. This eases
+    // accessibility later by using same address by reference technique as for
+    // normal nodes
     public function setTanAsInput($val) {
-        if (!(is_int($val))) {
+        if (!(is_int($val)))
             return TAN_ERROR;
-        }
         $this->setNumberInputs(1);
         $this->setUsage(USAGE_USE);
-        $this->forcedOutput = $val;
+        $this->output = $val;
     }
 
-    public function run() {
+    //
+    // run_fast() is only for networks with no feedback loops
+    public function run_fast() {
         $v = 0;
         for ($src = 0; $src < $this->inputSz; $src++) {
             $obj = $this->inputArray[$src];
             $v += $obj->getF(__FUNCTION__);
         }
-        $this->forcedOutput = $v;
+        $this->output = $v;
     }
 
-    public function run_SettleInput() {
+    //
+    // runSlow*() is for when feedback loops are present and propagates
+    // data forward in two goes
+    // 1. run_fast() risks undefined outputs changing between accesses in the
+    // same layer of the network
+    // 2. Ditto risks processing happening in one node before another in the
+    // same layer of the network
+    // Solution is to provide for two passes, with all nodes getting one pass
+    // before getting the other
+    // runSlowInput() pass conducts processing and caches result
+    // runSlowOutput() pass either reuses that cached result, uses the existing
+    // output if not undefined, or settles the undefined value to be used
+    public function runSlowInput() {
         $v = 0;
         for ($src = 0; $src < $this->inputSz; $src++) {
             $obj = $this->inputArray[$src];
             $v += $obj->getF(__FUNCTION__);
         }
-        $this->nextForcedOutput = $v;
+        $this->cachedOutput = $v;
     }
 
-    public function run_SettleOutput() {
-        if ($this->nextForcedOutput !== UNDEFINED_TXT)
-            $this->forcedOutput = $this->nextForcedOutput;
+    public function runSlowOutput() {
+        if ($this->cachedOutput !== UNDEFINED_TXT)
+            $this->output = $this->cachedOutput;
         else
-            $this->forcedOutput = $this->getF(__FUNCTION__);
+            $this->output = $this->getF(__FUNCTION__);
     }
 }

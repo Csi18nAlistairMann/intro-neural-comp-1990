@@ -56,9 +56,9 @@ function test_example13a() {
 
     //
     // First recognition that code will have to "run a turn"
-    $tan_a->run();
-    $tan_b->run();
-    $tan_c->run();
+    $tan_a->run_fast();
+    $tan_b->run_fast();
+    $tan_c->run_fast();
 
     //
     if ($tan_a->getF(__FUNCTION__) != $offset_a + 3)
@@ -123,9 +123,9 @@ function test_example13b() {
 
     //
     // First recognition that code will have to "run a turn"
-    $tan_a->run();
-    $tan_b->run();
-    $tan_c->run();
+    $tan_a->run_fast();
+    $tan_b->run_fast();
+    $tan_c->run_fast();
 
     //
     if ($tan_a->getF(__FUNCTION__) != $offset_a + 3)
@@ -183,9 +183,9 @@ function test_example13c() {
     $tan_c->setInputNAsTan(1, $tan_input_e);
     $tan_c->offset = $offset_c;
 
-    $tan_a->run();
-    $tan_b->run();
-    $tan_c->run();
+    $tan_a->run_fast();
+    $tan_b->run_fast();
+    $tan_c->run_fast();
 
     //
     if ($tan_a->getF(__FUNCTION__) != $offset_a + 3)
@@ -253,7 +253,7 @@ function test_example13d() {
     for ($tests = 0; $tests < 2; $tests++) {
 
         // First TAN works as above
-        $tan_a->run();
+        $tan_a->run_fast();
         if ($tan_a->getF(__FUNCTION__) != $offset_a + 2)
             echo "Problem with TAN A\n";
 
@@ -264,7 +264,7 @@ function test_example13d() {
         $response0 = 0;
         $response1 = 0;
         for ($a = 0; $a < 200; $a++) {
-            $tan_b->run();
+            $tan_b->run_fast();
             $v = $tan_b->getF(__FUNCTION__);
             if ($v === ($lastpass * $tests) + $offset_b + 2 + 0)
                 $response0++;
@@ -278,7 +278,7 @@ function test_example13d() {
 
         // Third TAN receives from First as above; Second is in one of
         // two states because it received from Third before Third ran
-        $tan_c->run();
+        $tan_c->run_fast();
         $v = $tan_c->getF(__FUNCTION__);
         if ($v !== ($lastpass * $tests) + $offset_c + $offset_b + $offset_a + 2 + 2 + 0 &&
             $v !== ($lastpass * $tests) + $offset_c + $offset_b + $offset_a + 2 + 2 + 1)
@@ -341,8 +341,8 @@ function test_example13e() {
     if ($response0 === 0 || $response1 === 0)
         echo "Problem with TAN B pass 0 - >$response0-$response1<\n";
 
-    // The problem is we are run()ing a node before the input nodes have
-    // been run(), and with each node using the other nodes for input, we
+    // The problem is we are run_fast()ing a node before the input nodes have
+    // been run_fast(), and with each node using the other nodes for input, we
     // have a circular problem: the 'undefined' output value might change
     // between passes;
     //
@@ -359,8 +359,8 @@ function test_example13e() {
     // This will require redoing the previous tests shortly.
 
     // Settle any undefined outputs, including offset
-    $tan_a->run_SettleOutput();
-    $tan_b->run_SettleOutput();
+    $tan_a->runSlowOutput();
+    $tan_b->runSlowOutput();
 
     $v = $tan_a->getF(__FUNCTION__);
     if ($v !== $offset_a + 0 && $v !== $offset_a + 1)
@@ -377,8 +377,8 @@ function test_example13e() {
     // - wait for tick
     // - make assessment available at new outputs
     // Then settle the inputs
-    $tan_a->run_SettleInput();
-    $tan_b->run_SettleInput();
+    $tan_a->runSlowInput();
+    $tan_b->runSlowInput();
 
     $v = $tan_a->getF(__FUNCTION__);
     if (!($v === $offset_a + 0 || $v === $offset_a + 1))
@@ -388,8 +388,8 @@ function test_example13e() {
         echo "Problem with TAN B - pass 2 >$v<\n";
 
     // Now first use of feeding the inputs forward
-    $tan_a->run_SettleOutput();
-    $tan_b->run_SettleOutput();
+    $tan_a->runSlowOutput();
+    $tan_b->runSlowOutput();
 
     $v = $tan_a->getF(__FUNCTION__);
     if ($v !== $offset_b + 0 + ($offset_a * 2) + 0 &&

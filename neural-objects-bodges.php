@@ -2,53 +2,54 @@
 declare(strict_types=1);
 
 /*
-  This file contains a derived class for the TAN including code to fake the
+  This file contains derived classes for the TAN including code to fake the
   neural processing elements
  */
 
 require_once('defines.php');
 require_once('neural-objects.php');
 
+//
+// tests 1.3 are about how nodes connect in a network
 class ToyAdaptiveNode_test_13 extends ToyAdaptiveNode
 {
     public $offset = 0;
 
-    public function run() {
+    public function run_fast() {
         if ($this->offset === 0)
             return TAN_ERROR;
         $rv = $this->offset;
         for ($src = 0; $src < $this->inputSz; $src++) {
             $obj = $this->inputArray[$src];
-
             $v = $obj->getF(__FUNCTION__);
             $rv += $v;
         }
-        $this->forcedOutput = $rv;
+        $this->output = $rv;
     }
 
-    public function run_SettleInput() {
+    public function runSlowInput() {
         if ($this->offset === 0)
             return TAN_ERROR;
         $rv = $this->offset;
         for ($src = 0; $src < $this->inputSz; $src++) {
             $obj = $this->inputArray[$src];
-
             $v = $obj->getF(__FUNCTION__);
             $rv += $v;
         }
-        $this->nextForcedOutput = $rv;
+        $this->cachedOutput = $rv;
     }
 
-    public function run_SettleOutput() {
-        if ($this->nextForcedOutput !== UNDEFINED_TXT)
-            $this->forcedOutput = $this->nextForcedOutput;
+    public function runSlowOutput() {
+        if ($this->cachedOutput !== UNDEFINED_TXT)
+            $this->output = $this->cachedOutput;
         else
-            $this->forcedOutput = $this->offset + $this->getF(__FUNCTION__);
+            $this->output = $this->offset + $this->getF(__FUNCTION__);
     }
 
 }
 
-
+//
+// tests 1.2 are about a node relating inputs to outputs
 class ToyAdaptiveNode_test_12 extends ToyAdaptiveNode
 {
     private function getF_example1_2_1() {
