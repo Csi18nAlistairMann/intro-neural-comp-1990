@@ -9,6 +9,46 @@ declare(strict_types=1);
 require_once('defines.php');
 require_once('neural-objects.php');
 
+class ToyAdaptiveNode_test_13 extends ToyAdaptiveNode
+{
+    public $offset = 0;
+
+    public function run() {
+        if ($this->offset === 0)
+            return TAN_ERROR;
+        $rv = $this->offset;
+        for ($src = 0; $src < $this->inputSz; $src++) {
+            $obj = $this->inputArray[$src];
+
+            $v = $obj->getF(__FUNCTION__);
+            $rv += $v;
+        }
+        $this->forcedOutput = $rv;
+    }
+
+    public function run_SettleInput() {
+        if ($this->offset === 0)
+            return TAN_ERROR;
+        $rv = $this->offset;
+        for ($src = 0; $src < $this->inputSz; $src++) {
+            $obj = $this->inputArray[$src];
+
+            $v = $obj->getF(__FUNCTION__);
+            $rv += $v;
+        }
+        $this->nextForcedOutput = $rv;
+    }
+
+    public function run_SettleOutput() {
+        if ($this->nextForcedOutput !== UNDEFINED_TXT)
+            $this->forcedOutput = $this->nextForcedOutput;
+        else
+            $this->forcedOutput = $this->offset + $this->getF(__FUNCTION__);
+    }
+
+}
+
+
 class ToyAdaptiveNode_test_12 extends ToyAdaptiveNode
 {
     private function getF_example1_2_1() {

@@ -4,3 +4,14 @@ $ php chap1.2.php
 Completed test_example121
 Completed test_example122
 $
+
+
+Chapter 1 Section 3 has five networks:
+
+$ php chap1.3.php
+Completed test_example13a
+Completed test_example13b
+Completed test_example13c
+Completed test_example13d
+Completed test_example13e
+$

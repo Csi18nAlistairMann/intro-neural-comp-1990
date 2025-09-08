@@ -8,6 +8,8 @@ class ToyAdaptiveNode
     protected $inputArray = array();
     protected $inputSz = TAN_ERROR; // 3 means inputs 0, 1, 2
     protected $teachUse = USAGE_TEACH;
+    protected $forcedOutput = UNDEFINED_TXT;
+    protected $nextForcedOutput = UNDEFINED_TXT;
 
     public function setNumberInputs($n) {
         if (!(is_int($n)))
@@ -19,6 +21,15 @@ class ToyAdaptiveNode
         if ($input >= $this->inputSz)
             return TAN_ERROR;
         if ($value === 0 || $value === 1)
+            $this->inputArray[$input] = $value;
+        else
+            return TAN_ERROR;
+    }
+
+    public function setInputNAsTan($input, &$value) {
+        if ($input >= $this->inputSz)
+            return TAN_ERROR;
+        if (is_object($value))
             $this->inputArray[$input] = $value;
         else
             return TAN_ERROR;
@@ -52,9 +63,47 @@ class ToyAdaptiveNode
     // class
     public function getF($example) {
         if ($this->getUsage() === USAGE_USE) {
-            // not written
-            return TAN_ERROR;
+            if ($this->forcedOutput !== UNDEFINED_TXT)
+                return $this->forcedOutput;
+            return $this->getUndefined();
         }
         return TAN_ERROR;
+    }
+
+    //
+    // For a special case of objects to add as common inputs to the network.
+    // This eases using address by reference later
+    public function setTanAsInput($val) {
+        if (!(is_int($val))) {
+            return TAN_ERROR;
+        }
+        $this->setNumberInputs(1);
+        $this->setUsage(USAGE_USE);
+        $this->forcedOutput = $val;
+    }
+
+    public function run() {
+        $v = 0;
+        for ($src = 0; $src < $this->inputSz; $src++) {
+            $obj = $this->inputArray[$src];
+            $v += $obj->getF(__FUNCTION__);
+        }
+        $this->forcedOutput = $v;
+    }
+
+    public function run_SettleInput() {
+        $v = 0;
+        for ($src = 0; $src < $this->inputSz; $src++) {
+            $obj = $this->inputArray[$src];
+            $v += $obj->getF(__FUNCTION__);
+        }
+        $this->nextForcedOutput = $v;
+    }
+
+    public function run_SettleOutput() {
+        if ($this->nextForcedOutput !== UNDEFINED_TXT)
+            $this->forcedOutput = $this->nextForcedOutput;
+        else
+            $this->forcedOutput = $this->getF(__FUNCTION__);
     }
 }
