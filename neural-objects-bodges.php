@@ -10,6 +10,78 @@ require_once('defines.php');
 require_once('neural-objects.php');
 
 //
+// tests 1.4 is about the firing rule
+class ToyAdaptiveNode_test_14 extends ToyAdaptiveNode
+{
+
+    private function getHammingDistance($a, $b) {
+        if (sizeof($a) !== sizeof($b))
+            return TAN_ERROR;
+
+        $dist = 0;
+        for ($idx = 0; $idx < sizeof($a); $idx++)
+            if ($a[$idx] !== $b[$idx]) $dist++;
+
+        return $dist;
+    }
+
+    public function run_fast() {
+        // What is the hamming distance from either of the taught sets?
+        $taughtSet0 = array([0, 0, 0], [0, 0, 1]);
+        $taughtSet1 = array([1, 1, 1], [1, 0, 1]);
+
+        $inputArr = array($this->inputArray[0]->getF(__FUNCTION__),
+                          $this->inputArray[1]->getF(__FUNCTION__),
+                          $this->inputArray[2]->getF(__FUNCTION__));
+
+        $hammingSet0 = 3;
+        for ($idx = 0; $idx < sizeof($taughtSet0); $idx++)
+            $hammingSet0 = min($hammingSet0,
+                               $this->getHammingDistance($taughtSet0[$idx],
+                                                         $inputArr));
+        $hammingSet1 = 3;
+        for ($idx = 0; $idx < sizeof($taughtSet1); $idx++)
+            $hammingSet1 = min($hammingSet1,
+                               $this->getHammingDistance($taughtSet1[$idx],
+                                                         $inputArr));
+
+        if ($hammingSet0 < $hammingSet1) {
+            $this->output = 0;
+        } elseif ($hammingSet0 > $hammingSet1) {
+            $this->output = 1;
+        } else {
+            $this->output = $this->getUndefined();
+        }
+    }
+
+    public function getF($example) {
+        if ($this->getUsage() !== USAGE_USE)
+            return TAN_ERROR;
+        // If fired
+        if ($this->output !== UNDEFINED_TXT)
+            return $this->output;
+        // if not fired
+        if (($this->inputArray[0]->getF($example) === 0 &&
+            $this->inputArray[1]->getF($example) === 0 &&
+            $this->inputArray[2]->getF($example) === 0) ||
+            ($this->inputArray[0]->getF($example) === 0 &&
+            $this->inputArray[1]->getF($example) === 0 &&
+             $this->inputArray[2]->getF($example) === 1)) {
+            return 0;
+        }
+        if (($this->inputArray[0]->getF($example) === 1 &&
+            $this->inputArray[1]->getF($example) === 1 &&
+            $this->inputArray[2]->getF($example) === 1) ||
+            ($this->inputArray[0]->getF($example) === 1 &&
+            $this->inputArray[1]->getF($example) === 0 &&
+             $this->inputArray[2]->getF($example) === 1)) {
+            return 1;
+        }
+        return $this->getUndefined();
+    }
+}
+
+//
 // tests 1.3 are about how nodes connect in a network
 class ToyAdaptiveNode_test_13 extends ToyAdaptiveNode
 {
@@ -45,7 +117,6 @@ class ToyAdaptiveNode_test_13 extends ToyAdaptiveNode
         else
             $this->output = $this->offset + $this->getF(__FUNCTION__);
     }
-
 }
 
 //
@@ -86,6 +157,5 @@ class ToyAdaptiveNode_test_12 extends ToyAdaptiveNode
         }
         return TAN_ERROR;
     }
-
 }
 ?>
