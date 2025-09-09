@@ -11,6 +11,8 @@ require_once('neural-objects.php');
 
 //
 // tests 1.5 are about H v T visual recognition
+// tests 1.6 reuses, and are about H v T `visual recognition
+// with the represented dsecision localised
 class ToyAdaptiveNode_test_15 extends ToyAdaptiveNode
 {
     private $taughtSet0 = array();

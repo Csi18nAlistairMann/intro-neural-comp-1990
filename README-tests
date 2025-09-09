@@ -15,3 +15,29 @@ Completed test_example13c
 Completed test_example13d
 Completed test_example13e
 $
+
+
+Chapter 1 Section 4 has two truth tables depending on if the
+firing rule has been applied:
+
+$ php chap1.4.php
+Completed test_example14
+$
+
+
+Chapter 1.5 looks for a distributed representation of if a
+3x3 grid shows a T or a H
+
+$ php chap1.5.php
+Completed test_example15a
+Completed test_example15b
+$
+
+
+Chapter 1.6 adds another layer to the 1.5 network above to
+obtain a localised representation of that T or H
+
+$ php chap1.6.php
+Completed test_example16a
+Completed test_example16b
+$
