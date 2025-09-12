@@ -22,9 +22,9 @@ function test_example121() {
     $tan = new ToyAdaptiveNode_test_12;
     $tan->setNumberInputs(3);
     $tan->setUsage(USAGE_USE);
-    $tan->setInputN(0, 0);
-    $tan->setInputN(1, 0);
-    $tan->setInputN(2, 0);
+    $tan->setInputNAsInt(0, 0);
+    $tan->setInputNAsInt(1, 0);
+    $tan->setInputNAsInt(2, 0);
     if ($tan->getF(__FUNCTION__) != 0) {
         echo "Error for 000\n";
     }
@@ -32,9 +32,9 @@ function test_example121() {
     $tan = new ToyAdaptiveNode_test_12;
     $tan->setNumberInputs(3);
     $tan->setUsage(USAGE_USE);
-    $tan->setInputN(0, 0);
-    $tan->setInputN(1, 1);
-    $tan->setInputN(2, 0);
+    $tan->setInputNAsInt(0, 0);
+    $tan->setInputNAsInt(1, 1);
+    $tan->setInputNAsInt(2, 0);
     if ($tan->getF(__FUNCTION__) != 1) {
         echo "Error for 010\n";
     }
@@ -42,9 +42,9 @@ function test_example121() {
     $tan = new ToyAdaptiveNode_test_12;
     $tan->setNumberInputs(3);
     $tan->setUsage(USAGE_USE);
-    $tan->setInputN(0, 0);
-    $tan->setInputN(1, 1);
-    $tan->setInputN(2, 1);
+    $tan->setInputNAsInt(0, 0);
+    $tan->setInputNAsInt(1, 1);
+    $tan->setInputNAsInt(2, 1);
     if ($tan->getF(__FUNCTION__) != 0) {
         echo "Error for 000\n";
     }
@@ -59,9 +59,9 @@ function test_example122() {
     $tan = new ToyAdaptiveNode_test_12;
     $tan->setNumberInputs(3);
     $tan->setUsage(USAGE_USE);
-    $tan->setInputN(0, 0);
-    $tan->setInputN(1, 0);
-    $tan->setInputN(2, 0);
+    $tan->setInputNAsInt(0, 0);
+    $tan->setInputNAsInt(1, 0);
+    $tan->setInputNAsInt(2, 0);
     if ($tan->getF(__FUNCTION__) != 0) {
         echo "Error for 000\n";
     }
@@ -69,9 +69,9 @@ function test_example122() {
     $tan = new ToyAdaptiveNode_test_12;
     $tan->setNumberInputs(3);
     $tan->setUsage(USAGE_USE);
-    $tan->setInputN(0, 1);
-    $tan->setInputN(1, 1);
-    $tan->setInputN(2, 1);
+    $tan->setInputNAsInt(0, 1);
+    $tan->setInputNAsInt(1, 1);
+    $tan->setInputNAsInt(2, 1);
     if ($tan->getF(__FUNCTION__) != 1) {
         echo "Error for 010\n";
     }
@@ -82,9 +82,9 @@ function test_example122() {
         $tan = new ToyAdaptiveNode_test_12;
         $tan->setNumberInputs(3);
         $tan->setUsage(USAGE_USE);
-        $tan->setInputN(0, 0);
-        $tan->setInputN(1, 1);
-        $tan->setInputN(2, 1);
+        $tan->setInputNAsInt(0, 0);
+        $tan->setInputNAsInt(1, 1);
+        $tan->setInputNAsInt(2, 1);
         $response = $tan->getF(__FUNCTION__);
         if ($response === 0)
             $response0++;

@@ -279,10 +279,12 @@ class ToyAdaptiveNode_test_13 extends ToyAdaptiveNode
 // tests 1.2 are about a node relating inputs to outputs
 class ToyAdaptiveNode_test_12 extends ToyAdaptiveNode
 {
+    protected $inputArrayInt = array();
+
     private function getF_example1_2_1() {
-        if (($this->inputArray[0] +
-             $this->inputArray[1] +
-             $this->inputArray[2]) === 1) {
+        if (($this->inputArrayInt[0] +
+             $this->inputArrayInt[1] +
+             $this->inputArrayInt[2]) === 1) {
             return 1;
         } else {
             return 0;
@@ -290,13 +292,13 @@ class ToyAdaptiveNode_test_12 extends ToyAdaptiveNode
     }
 
     private function getF_example1_2_2() {
-        if (($this->inputArray[0] +
-             $this->inputArray[1] +
-             $this->inputArray[2]) === 0) {
+        if (($this->inputArrayInt[0] +
+             $this->inputArrayInt[1] +
+             $this->inputArrayInt[2]) === 0) {
             return 0;
-        } elseif (($this->inputArray[0] +
-                   $this->inputArray[1] +
-                   $this->inputArray[2]) === 3) {
+        } elseif (($this->inputArrayInt[0] +
+                   $this->inputArrayInt[1] +
+                   $this->inputArrayInt[2]) === 3) {
             return 1;
         } else {
             return $this->getUndefined();
@@ -312,6 +314,17 @@ class ToyAdaptiveNode_test_12 extends ToyAdaptiveNode
             return $this->getF_example1_2_2();
         }
         return TAN_ERROR;
+    }
+
+    //
+    // Bodge for first example using INTs not TANs as inputs
+    public function setInputNAsInt($input, $value) {
+        if ($input >= $this->inputSz)
+            return TAN_ERROR;
+        if ($value === 0 || $value === 1)
+            $this->inputArrayInt[$input] = $value;
+        else
+            return TAN_ERROR;
     }
 }
 ?>

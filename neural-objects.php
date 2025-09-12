@@ -17,15 +17,6 @@ class ToyAdaptiveNode
         $this->inputSz = $n;
     }
 
-    public function setInputN($input, $value) {
-        if ($input >= $this->inputSz)
-            return TAN_ERROR;
-        if ($value === 0 || $value === 1)
-            $this->inputArray[$input] = $value;
-        else
-            return TAN_ERROR;
-    }
-
     public function setInputNAsTan($input, &$value) {
         if ($input >= $this->inputSz)
             return TAN_ERROR;
