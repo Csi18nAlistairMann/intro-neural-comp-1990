@@ -13,6 +13,83 @@ require_once('neural-objects.php');
 // tests 1.5 are about H v T visual recognition
 // tests 1.6 reuses, and are about H v T `visual recognition
 // with the represented dsecision localised
+class ToyAdaptiveNode_test_18a extends ToyAdaptiveNode
+{
+    private $taughtSet0 = array();
+    private $taughtSet1 = array();
+
+    //
+    // Bodge to fake the learning described but skipped over
+    public function setTaughtSets($array0, $array1) {
+        $this->taughtSet0 = $array0;
+        $this->taughtSet1 = $array1;
+    }
+
+    private function getHammingDistance($a, $b) {
+        if (sizeof($a) !== sizeof($b))
+            return TAN_ERROR;
+
+        $dist = 0;
+        for ($idx = 0; $idx < sizeof($a); $idx++)
+            if ($a[$idx] !== $b[$idx]) $dist++;
+
+        return $dist;
+    }
+
+    public function run_fast() {
+        // What is the hamming distance from either of the taught sets?
+        $inputArr = array($this->inputArray[0]->getF(__FUNCTION__),
+                          $this->inputArray[1]->getF(__FUNCTION__),
+                          $this->inputArray[2]->getF(__FUNCTION__),
+                          $this->inputArray[3]->getF(__FUNCTION__));
+
+        $hammingSet0 = 3;
+        for ($idx = 0; $idx < sizeof($this->taughtSet0); $idx++)
+            $hammingSet0 = min($hammingSet0,
+                               $this->getHammingDistance($this->taughtSet0[$idx],
+                                                         $inputArr));
+        $hammingSet1 = 3;
+        for ($idx = 0; $idx < sizeof($this->taughtSet1); $idx++)
+            $hammingSet1 = min($hammingSet1,
+                               $this->getHammingDistance($this->taughtSet1[$idx],
+                                                         $inputArr));
+
+        if ($hammingSet0 < $hammingSet1) {
+            $this->output = 0;
+        } elseif ($hammingSet0 > $hammingSet1) {
+            $this->output = 1;
+        } else {
+            $this->output = $this->getUndefined();
+        }
+    }
+
+    public function getF($example) {
+        if ($this->getUsage() !== USAGE_USE)
+            return TAN_ERROR;
+        // If fired
+        if ($this->output !== UNDEFINED_TXT)
+            return $this->output;
+        // if not fired
+        if ($this->inputArray[0]->getF($example) === 1 &&
+            $this->inputArray[1]->getF($example) === 1 &&
+            $this->inputArray[2]->getF($example) === 0 &&
+            $this->inputArray[3]->getF($example) === 0) {
+            return 0;
+        }
+        if ($this->inputArray[0]->getF($example) === 1 &&
+            $this->inputArray[1]->getF($example) === 1 &&
+            $this->inputArray[2]->getF($example) === 1 &&
+            $this->inputArray[3]->getF($example) === 1) {
+            return 1;
+        }
+        return $this->getUndefined();
+    }
+}
+
+//
+// tests 1.5 are about H v T visual recognition
+// tests 1.6 reuses, and are about H v T `visual recognition
+// with the represented dsecision localised
 class ToyAdaptiveNode_test_15 extends ToyAdaptiveNode
 {
     private $taughtSet0 = array();

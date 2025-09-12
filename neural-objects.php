@@ -35,6 +35,21 @@ class ToyAdaptiveNode
             return TAN_ERROR;
     }
 
+    public function setFromInputNAsTan($input, $tanArr) {
+        $fakeArray = array();
+
+        if ($input >= $this->inputSz)
+            return TAN_ERROR;
+
+        foreach ($tanArr as &$value) {
+            if (is_object($value))
+                $fakeArray[$input++] = $value;
+            else
+                return TAN_ERROR;
+        }
+        $this->inputArray = $fakeArray;
+    }
+
     public function setUsage($usage) {
         if ($usage === USAGE_USE || $usage === USAGE_TEACH)
             $this->teachUse = $usage;
