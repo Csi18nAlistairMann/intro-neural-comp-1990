@@ -4,15 +4,78 @@ declare(strict_types=1);
 /*
   This file contains derived classes for the TAN including code to fake the
   neural processing elements
- */
+*/
 
 require_once('defines.php');
 require_once('neural-objects.php');
 
 //
-// tests 1.5 are about H v T visual recognition
-// tests 1.6 reuses, and are about H v T `visual recognition
-// with the represented dsecision localised
+// 18b tests demonstrate that the output can be different from the taught
+// pattern: note both T and H result in TANs 11 & 22 outputting a 1 both
+// ways. This is bodged by a straightforward index into the taught set.
+//
+// I can't tell just yet how this will work out. Both training sets output
+// a 1? All inputs on or off cause a 1? The firing rule uses the hamming
+// distance and outputs whatevers at that index in another lookup?
+class ToyAdaptiveNode_test_18b extends ToyAdaptiveNode
+{
+    private $taughtSet0 = array();
+
+    public function setTaughtSets($array0, $array1) {
+        $this->taughtSet0 = $array0;
+    }
+
+    public function run_fast() {
+        //
+        // Use the inputs as an index into the taught set to establish
+        // what the output should be
+        //
+        // 1. Get the inputs
+        $w = $this->inputArray[0]->getF(__FUNCTION__);
+        $n = $this->inputArray[1]->getF(__FUNCTION__);
+        $e = $this->inputArray[2]->getF(__FUNCTION__);
+        $s = $this->inputArray[3]->getF(__FUNCTION__);
+        // 2. Convert the inputs into 0 to 15
+        $zero2fifteen = ($w * 8) + ($n * 4) + ($e * 2) + $s;
+        // 3. Use that to look up the outputs
+        $rv = $this->taughtSet0[$zero2fifteen];
+        // 4. Handle undefined
+        if ($rv === 2)
+            $rv = $this->getUndefined();
+        $this->output = $rv;
+    }
+
+    //
+    // Note this time we return the output specified by the taught set, not
+    // the output with the lowest hamming distance, which could be different
+    public function getF($example) {
+        if ($this->getUsage() !== USAGE_USE)
+            return TAN_ERROR;
+
+        if ($this->output !== UNDEFINED_TXT)
+            return $this->output;
+
+        if ($this->inputArray[0]->getF($example) === $this->taughtSet0[0] &&
+            $this->inputArray[1]->getF($example) === $this->taughtSet0[1] &&
+            $this->inputArray[2]->getF($example) === $this->taughtSet0[2] &&
+            $this->inputArray[3]->getF($example) === $this->taughtSet0[3]) {
+            return 0;
+        }
+        if ($this->inputArray[0]->getF($example) === $this->taughtSet1[0] &&
+            $this->inputArray[1]->getF($example) === $this->taughtSet1[1] &&
+            $this->inputArray[2]->getF($example) === $this->taughtSet1[2] &&
+            $this->inputArray[3]->getF($example) === $this->taughtSet1[3]) {
+            return 1;
+        }
+        return $this->getUndefined();
+    }
+}
+
+//
+// 18a tests against the p13 truth table.
+//
+// Note unlike 18b, TAN23 uses the same output as for the hamming distance
+// to the taught set.
 class ToyAdaptiveNode_test_18a extends ToyAdaptiveNode
 {
     private $taughtSet0 = array();
@@ -43,12 +106,12 @@ class ToyAdaptiveNode_test_18a extends ToyAdaptiveNode
                           $this->inputArray[2]->getF(__FUNCTION__),
                           $this->inputArray[3]->getF(__FUNCTION__));
 
-        $hammingSet0 = 3;
+        $hammingSet0 = 4;
         for ($idx = 0; $idx < sizeof($this->taughtSet0); $idx++)
             $hammingSet0 = min($hammingSet0,
                                $this->getHammingDistance($this->taughtSet0[$idx],
                                                          $inputArr));
-        $hammingSet1 = 3;
+        $hammingSet1 = 4;
         for ($idx = 0; $idx < sizeof($this->taughtSet1); $idx++)
             $hammingSet1 = min($hammingSet1,
                                $this->getHammingDistance($this->taughtSet1[$idx],
@@ -66,20 +129,30 @@ class ToyAdaptiveNode_test_18a extends ToyAdaptiveNode
     public function getF($example) {
         if ($this->getUsage() !== USAGE_USE)
             return TAN_ERROR;
-        // If fired
+
         if ($this->output !== UNDEFINED_TXT)
             return $this->output;
-        // if not fired
-        if ($this->inputArray[0]->getF($example) === 1 &&
-            $this->inputArray[1]->getF($example) === 1 &&
-            $this->inputArray[2]->getF($example) === 0 &&
-            $this->inputArray[3]->getF($example) === 0) {
+
+        //
+        // TAN23 bodged responses to specific tests in the caller
+        if (($this->inputArray[0]->getF($example) === 1 &&
+             $this->inputArray[1]->getF($example) === 1 &&
+             $this->inputArray[2]->getF($example) === 0 &&
+             $this->inputArray[3]->getF($example) === 0) ||
+            ($this->inputArray[0]->getF($example) === 0 &&
+             $this->inputArray[1]->getF($example) === 1 &&
+             $this->inputArray[2]->getF($example) === 0 &&
+             $this->inputArray[3]->getF($example) === 0)) {
             return 0;
         }
-        if ($this->inputArray[0]->getF($example) === 1 &&
-            $this->inputArray[1]->getF($example) === 1 &&
-            $this->inputArray[2]->getF($example) === 1 &&
-            $this->inputArray[3]->getF($example) === 1) {
+        if (($this->inputArray[0]->getF($example) === 1 &&
+             $this->inputArray[1]->getF($example) === 1 &&
+             $this->inputArray[2]->getF($example) === 1 &&
+             $this->inputArray[3]->getF($example) === 1) ||
+            ($this->inputArray[0]->getF($example) === 0 &&
+             $this->inputArray[1]->getF($example) === 0 &&
+             $this->inputArray[2]->getF($example) === 1 &&
+             $this->inputArray[3]->getF($example) === 1)) {
             return 1;
         }
         return $this->getUndefined();
@@ -147,18 +220,18 @@ class ToyAdaptiveNode_test_15 extends ToyAdaptiveNode
             return $this->output;
         // if not fired
         if (($this->inputArray[0]->getF($example) === 0 &&
-            $this->inputArray[1]->getF($example) === 0 &&
-            $this->inputArray[2]->getF($example) === 0) ||
+             $this->inputArray[1]->getF($example) === 0 &&
+             $this->inputArray[2]->getF($example) === 0) ||
             ($this->inputArray[0]->getF($example) === 0 &&
              $this->inputArray[1]->getF($example) === 0 &&
              $this->inputArray[2]->getF($example) === 1)) {
             return 0;
         }
         if (($this->inputArray[0]->getF($example) === 1 &&
-            $this->inputArray[1]->getF($example) === 1 &&
-            $this->inputArray[2]->getF($example) === 1) ||
+             $this->inputArray[1]->getF($example) === 1 &&
+             $this->inputArray[2]->getF($example) === 1) ||
             ($this->inputArray[0]->getF($example) === 1 &&
-            $this->inputArray[1]->getF($example) === 0 &&
+             $this->inputArray[1]->getF($example) === 0 &&
              $this->inputArray[2]->getF($example) === 1)) {
             return 1;
         }
@@ -218,18 +291,18 @@ class ToyAdaptiveNode_test_14 extends ToyAdaptiveNode
             return $this->output;
         // if not fired
         if (($this->inputArray[0]->getF($example) === 0 &&
-            $this->inputArray[1]->getF($example) === 0 &&
-            $this->inputArray[2]->getF($example) === 0) ||
+             $this->inputArray[1]->getF($example) === 0 &&
+             $this->inputArray[2]->getF($example) === 0) ||
             ($this->inputArray[0]->getF($example) === 0 &&
-            $this->inputArray[1]->getF($example) === 0 &&
+             $this->inputArray[1]->getF($example) === 0 &&
              $this->inputArray[2]->getF($example) === 1)) {
             return 0;
         }
         if (($this->inputArray[0]->getF($example) === 1 &&
-            $this->inputArray[1]->getF($example) === 1 &&
-            $this->inputArray[2]->getF($example) === 1) ||
+             $this->inputArray[1]->getF($example) === 1 &&
+             $this->inputArray[2]->getF($example) === 1) ||
             ($this->inputArray[0]->getF($example) === 1 &&
-            $this->inputArray[1]->getF($example) === 0 &&
+             $this->inputArray[1]->getF($example) === 0 &&
              $this->inputArray[2]->getF($example) === 1)) {
             return 1;
         }

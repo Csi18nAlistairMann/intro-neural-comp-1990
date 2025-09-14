@@ -1,3 +1,26 @@
+Individual chapters can be found below
+All of them can be run together thus:
+
+$ ./runall.sh
+Completed test_example18a
+Completed test_example18b
+Completed test_example16a
+Completed test_example16b
+Completed test_example15a
+Completed test_example15b
+Completed test_example14
+Completed test_example13a
+Completed test_example13b
+Completed test_example13c
+Completed test_example13d
+Completed test_example13e
+Completed test_example121
+Completed test_example122
+$
+
+
+Individual chapters:
+
 Chapter 1 Section 2 has two examples. Expected output:
 
 $ php chap1.2.php
@@ -40,4 +63,13 @@ obtain a localised representation of that T or H
 $ php chap1.6.php
 Completed test_example16a
 Completed test_example16b
+$
+
+
+Chapter 1.8 adds presents a 3x3 network that can stabalise on
+its taught sets
+
+$ php chap1.8.php
+Completed test_example18a
+Completed test_example18b
 $
