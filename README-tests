@@ -4,6 +4,26 @@ All of them can be run together thus:
 $ ./runall.sh
 Completed test_example18a
 Completed test_example18b
+Run no: 0
+000 101 111 111
+000 010 010 010
+000 010 010 010
+
+Run no: 1
+111 111 101 101
+111 111 111 111
+111 101 101 101
+
+Run no: 2
+111 111 101 111 101 111
+010 011 110 011 110 011
+111 000 011 100 011 100
+
+Run no: 3
+010 111 101 111 101 111 101
+010 111 110 011 110 011 110
+111 000 111 100 011 100 011
+Completed test_example18c
 Completed test_example16a
 Completed test_example16b
 Completed test_example15a
@@ -66,10 +86,31 @@ Completed test_example16b
 $
 
 
-Chapter 1.8 adds presents a 3x3 network that can stabalise on
-its taught sets
+Chapter 1.8 adds presents a 3x3 network that tries to stabilise on
+its taught sets. Note that the All 0 and All 1 runs stabilise properly;
+the I and 1 run will stabilise on H, T, and often won't stabilise
 
 $ php chap1.8.php
 Completed test_example18a
 Completed test_example18b
+Run no: 0
+000 101 111 111
+000 010 010 010
+000 010 010 010
+
+Run no: 1
+111 111 101 101
+111 111 111 111
+111 101 101 101
+
+Run no: 2
+111 111 101 111 111
+010 010 010 010 010
+111 000 010 010 010
+
+Run no: 3
+010 111 101 111 101 111
+010 011 110 011 110 011
+111 000 011 100 011 100
+Completed test_example18c
 $
