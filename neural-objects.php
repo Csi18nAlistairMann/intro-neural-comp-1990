@@ -3,6 +3,63 @@ declare(strict_types=1);
 
 require_once('defines.php');
 
+//
+// Obtain a string read out of a network run in a more easily understood
+// format. C1S8 example below
+class MemoryStatesHandler
+{
+    private $runs;
+
+    public function __construct($value) {
+        $this->runs = $value;
+    }
+
+    //
+    // C1S8 network
+    //
+    // Run no: 0
+    // 000 101 111 111
+    // 000 010 010 010
+    // 000 010 010 010
+    //
+    // Run no: 1
+    // 111 111 101 101
+    // 111 111 111 111
+    // 111 101 101 101
+    //
+    // Run no: 2
+    // 111 111 101 111 101 101
+    // 010 111 111 111 111 111
+    // 111 000 111 101 101 101
+    public function getReadOut_c1s8() {
+        $rv = '';
+        $runIdx = 0;
+        foreach ($this->runs as $run) {
+            $rv .= "\n";
+            $rv .= "Run no: $runIdx\n";
+
+            $output0 = "";
+            $output1 = "";
+            $output2 = "";
+
+            foreach ($run as $stms) {
+                $output0 .= "${stms[0]}${stms[1]}${stms[2]} ";
+                $output1 .= "${stms[3]}${stms[4]}${stms[5]} ";
+                $output2 .= "${stms[6]}${stms[7]}${stms[8]} ";
+            }
+            $output0 .= "\n";
+            $output1 .= "\n";
+            $output2 .= "\n";
+            $rv .= $output0 . $output1 . $output2;
+
+            $runIdx++;
+        }
+
+        $rv = trim($rv) . "\n";
+        return $rv;
+    }
+}
+
 class ToyAdaptiveNode
 {
     protected $inputArray = array();
@@ -10,6 +67,28 @@ class ToyAdaptiveNode
     protected $teachUse = USAGE_TEACH;
     protected $output = UNDEFINED_TXT;
     protected $cachedOutput = UNDEFINED_TXT;
+    protected $clampedValue = UNDEFINED;
+
+    //
+    // When a node is clamped, inputs can be ignored during the input phase,
+    // and the output directly retrieved from the clamped value during the
+    // output phase,
+    public function setClampedValue($value) {
+        switch ($value) {
+        case 0:
+        case 1:
+        case null:
+        case UNDEFINED:
+            $this->clampedValue = $value;
+            break;
+        default:
+            return TAN_ERROR;
+        }
+    }
+
+    public function getClampedValue() {
+        return $this->clampedValue;
+    }
 
     public function setNumberInputs($n) {
         if (!(is_int($n)))
@@ -66,11 +145,19 @@ class ToyAdaptiveNode
     // getF() is where one might expect neural processing to have happened.
     public function getF($example) {
         if ($this->getUsage() === USAGE_USE) {
+            $v = $this->getClampedValue();
+            if ($v === 0 || $v === 1)
+                return $v;
             if ($this->output !== UNDEFINED_TXT)
                 return $this->output;
             return $this->getUndefined();
         }
         return TAN_ERROR;
+    }
+
+    public function initialise($value) {
+        $this->output = $value;
+        $this->cachedOutput = $value;
     }
 
     //
@@ -88,10 +175,13 @@ class ToyAdaptiveNode
     //
     // run_fast() is only for networks with no feedback loops
     public function run_fast() {
-        $v = 0;
-        for ($src = 0; $src < $this->inputSz; $src++) {
-            $obj = $this->inputArray[$src];
-            $v += $obj->getF(__FUNCTION__);
+        $v = $this->getClampedValue();
+        if (!($v === 0 || $v === 1)) {
+            $v = 0;
+            for ($src = 0; $src < $this->inputSz; $src++) {
+                $obj = $this->inputArray[$src];
+                $v += $obj->getF(__FUNCTION__);
+            }
         }
         $this->output = $v;
     }
@@ -109,18 +199,25 @@ class ToyAdaptiveNode
     // runSlowOutput() pass either reuses that cached result, uses the existing
     // output if not undefined, or settles the undefined value to be used
     public function runSlowInput() {
-        $v = 0;
-        for ($src = 0; $src < $this->inputSz; $src++) {
-            $obj = $this->inputArray[$src];
-            $v += $obj->getF(__FUNCTION__);
+        $v = $this->getClampedValue();
+        if (!($v === 0 || $v === 1)) {
+            $v = 0;
+            for ($src = 0; $src < $this->inputSz; $src++) {
+                $obj = $this->inputArray[$src];
+                $v += $obj->getF(__FUNCTION__);
+            }
         }
         $this->cachedOutput = $v;
     }
 
     public function runSlowOutput() {
-        if ($this->cachedOutput !== UNDEFINED_TXT)
-            $this->output = $this->cachedOutput;
-        else
-            $this->output = $this->getF(__FUNCTION__);
+        $v = $this->getClampedValue();
+        if (!($v === 0 || $v === 1)) {
+            if ($this->cachedOutput !== UNDEFINED_TXT)
+                $this->output = $this->cachedOutput;
+            else
+                $this->output = $this->getF(__FUNCTION__);
+        }
+        $this->output = $v;
     }
 }
