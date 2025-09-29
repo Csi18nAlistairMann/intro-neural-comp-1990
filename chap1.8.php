@@ -14,7 +14,7 @@ declare(strict_types=1);
   meaning at each node.
 
   In learning this I also set up 'clamped' functionality even though that's
-  not introduced until C1S9.
+  not defined until C1S9.
 */
 
 require_once('defines.php');
@@ -524,10 +524,9 @@ function test_example18c() {
                      $tan31, $tan32, $tan33);
 
     //
-    // The book only offers that all 0s resolves to T.
-    // It doesn't say, but I suspect all 1s doesn't resolve at all. Turns out
-    // I was wrong - all 1s resolves to H. I also fancied running the network
-    // starting from an I and a 1.
+    // The book on p14 offers that all 0s resolves to T, and on p16 that all
+    // 1s resolves to H.
+    // I also fancied running the network starting from an I and a 1.
     $startingSets = [[0, 0, 0, 0, 0, 0, 0, 0, 0],
                      [1, 1, 1, 1, 1, 1, 1, 1, 1],
                      [1, 1, 1, 0, 1, 0, 1, 1, 1],
