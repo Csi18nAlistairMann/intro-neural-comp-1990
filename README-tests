@@ -2,6 +2,29 @@ Individual chapters can be found below
 All of them can be run together thus:
 
 $ ./runall.sh
+Run no: 0
+111 111 111 111 111 111 111
+111 111 111 011 110 011 110
+011 110 011 110 011 110 011
+Run no: 0
+111 111 111 111 111
+111 011 110 011 110
+011 110 011 110 011
+Completed test_example19a
+  3,3   [  2,4   ]: 50.05 [ 1,5-up ]: 49.95
+ 1,5-up [1,5-down]: 49.68 [  0,6   ]: 50.32
+1,5-down[  0,6   ]: 49.84 [ 1,5-up ]: 50.16
+  2,4   [1,5-down]: 25.10 [  0,6   ]: 24.81 [ 1,5-up ]: 25.10 [2,4 loop]: 24.99
+Completed test_example19b
+Run no: 0
+111 111 111 111
+111 011 010 010
+011 010 010 010
+Run no: 0
+111 111 111 111
+111 111 010 010
+011 010 010 010
+Completed test_example19c
 Completed test_example18a
 Completed test_example18b
 Run no: 0
@@ -15,14 +38,14 @@ Run no: 1
 111 101 101 101
 
 Run no: 2
-111 111 101 111 101 111
-010 011 110 011 110 011
-111 000 011 100 011 100
+111 111 101 111 101
+010 011 010 011 010
+111 000 011 000 011
 
 Run no: 3
-010 111 101 111 101 111 101
-010 111 110 011 110 011 110
-111 000 111 100 011 100 011
+010 111 101 111 101 101
+010 111 111 111 111 111
+111 000 111 101 101 101
 Completed test_example18c
 Completed test_example16a
 Completed test_example16b
@@ -113,4 +136,42 @@ Run no: 3
 010 011 110 011 110 011
 111 000 011 100 011 100
 Completed test_example18c
+$
+
+
+Chapter 1.9 explores that the 3x3 network can get stuck in a cycle
+and demonstrates that by claming a node to give a distinguishing
+feature, that cycle can be resolved.
+Figure 1.7b appears to be wrong, so the second test explores what
+the probabilities and paths to the figure truly are. Also see the
+./Errata/Figure1.7b/ directory
+
+$ php chap1.9.php
+Run no: 0
+111 111 111 111 111
+111 011 110 011 110
+011 110 011 110 011
+Run no: 0
+111 111 111 111 111 111
+111 111 110 011 110 011
+011 110 011 110 011 110
+Run no: 0
+111 111 111 111 111
+111 011 110 011 110
+011 110 011 110 011
+Completed test_example19a
+  3,3   [  2,4   ]: 50.24 [ 1,5-up ]: 49.76
+ 1,5-up [1,5-down]: 50.14 [  0,6   ]: 49.86
+1,5-down[  0,6   ]: 50.31 [ 1,5-up ]: 49.69
+  2,4   [1,5-down]: 25.00 [  0,6   ]: 25.10 [ 1,5-up ]: 25.10 [2,4 loop]: 24.80
+Completed test_example19b
+Run no: 0
+111 111 111 111 111 111
+111 111 011 110 010 010
+011 010 010 010 010 010
+Run no: 0
+111 111 111 111
+111 011 010 010
+011 010 010 010
+Completed test_example19c
 $

@@ -1,4 +1,5 @@
 #!/bin/bash
+php chap1.9.php
 php chap1.8.php
 php chap1.6.php
 php chap1.5.php
