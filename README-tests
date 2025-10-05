@@ -180,70 +180,85 @@ $
 Chapter 1 Exercises has a look at the effect of clamping or lack thereof on how the network reaches a
 resolution. Without the clamp we can see random starting patterns reach one or other of the prototype
 patterns, and very often reach neither.
-With TAN22 clamped to 0 there's a dramatic change in outcomes to never reach H, and usually reach T
-although there are occasions when it can't.
-Similarly with TAN22 clamped to 1, the network is much more likely to get to H, or perhaps cycle on
-the way, and never reach T
+With TAN22 clamped to 0 neither prototype can ever be reached as both use it. Most of the time the
+network cycles, sometimes timing out
+With TAN22 clamped to 1, the network is much more likely to get to T or H with varying probabilities,
+given both use it, occasionally timing out.
+Answer 1 declares $1100$$$$ has no generalisation which seemed unlikely. No1 answer below indicates
+All-0s for the undefineds will reach T every time, All-1s will reach H 31% of the time, cycling otherwise.
+Answer 4 declares 101000010 will reach 111000000 with F22 clamped. My code reports clamping F22 to 0
+results in 111000010. Manually working through versus the truth table on page 14 suggests the book
+shows the wrong answer.
 
 $ php chap1.exercises.php
 No clamp
 Pattern: 0,0,0,0,0,0,1,0,0   Stable:  0.00  TooDeep:  0.00    Cycle:   100        T:  0.00        H:  0.00
-Pattern: 0,0,0,1,1,1,0,0,0   Stable: 49.30  TooDeep:  3.48    Cycle: 47.22        T: 49.28        H: 49.30
-Pattern: 1,0,0,0,0,1,0,1,0   Stable: 93.38  TooDeep:  0.00    Cycle:  6.62        T: 93.38        H:  0.00
+Pattern: 0,0,0,1,1,1,0,0,0   Stable: 48.96  TooDeep:  3.66    Cycle: 47.38        T: 48.94        H: 48.96
+Pattern: 1,0,0,0,0,1,0,1,0   Stable: 93.88  TooDeep:  0.00    Cycle:  6.12        T: 93.88        H:  0.00
 Pattern: 1,1,1,1,1,1,0,1,1   Stable:  0.00  TooDeep:  0.00    Cycle:   100        T:  0.00        H:  0.00
-Pattern: 0,0,0,1,1,1,0,0,1   Stable: 93.50  TooDeep:  0.00    Cycle:  6.50        T:  0.00        H: 93.50
-Pattern: 0,0,0,1,1,1,0,1,1   Stable: 30.60  TooDeep:  0.00    Cycle: 69.40        T:  0.00        H: 30.60
-Pattern: 0,0,1,0,0,1,0,1,1   Stable: 49.72  TooDeep:  3.32    Cycle: 46.96        T: 49.72        H: 49.66
-Pattern: 0,1,0,0,1,0,0,1,1   Stable: 94.12  TooDeep:  0.00    Cycle:  5.88        T: 94.12        H:  0.00
-Pattern: 0,1,0,1,1,1,1,0,0   Stable: 63.26  TooDeep:  0.00    Cycle: 36.74        T:  0.00        H: 63.26
-Pattern: 0,1,1,1,1,0,0,0,0   Stable: 32.32  TooDeep:  0.00    Cycle: 67.68        T: 32.32        H:  0.00
+Pattern: 0,0,0,1,1,1,0,0,1   Stable: 94.18  TooDeep:  0.00    Cycle:  5.82        T:  0.00        H: 94.18
+Pattern: 0,0,0,1,1,1,0,1,1   Stable: 30.80  TooDeep:  0.00    Cycle: 69.20        T:  0.00        H: 30.80
+Pattern: 0,0,1,0,0,1,0,1,1   Stable: 49.90  TooDeep:  3.42    Cycle: 46.68        T: 49.90        H: 49.88
+Pattern: 0,1,0,0,1,0,0,1,1   Stable: 93.38  TooDeep:  0.00    Cycle:  6.62        T: 93.38        H:  0.00
+Pattern: 0,1,0,1,1,1,1,0,0   Stable: 63.46  TooDeep:  0.00    Cycle: 36.54        T:  0.00        H: 63.46
+Pattern: 0,1,1,1,1,0,0,0,0   Stable: 32.20  TooDeep:  0.00    Cycle: 67.80        T: 32.20        H:  0.00
 Pattern: 1,0,1,0,0,0,1,0,0   Stable:  0.00  TooDeep:  0.00    Cycle:   100        T:  0.00        H:  0.00
-Pattern: 1,0,1,0,1,0,1,1,1   Stable: 47.74  TooDeep:  2.66    Cycle: 49.60        T: 47.74        H: 47.72
-Pattern: 1,0,1,0,1,1,1,1,1   Stable: 24.60  TooDeep:  0.00    Cycle: 75.40        T:  0.00        H: 24.60
+Pattern: 1,0,1,0,1,0,1,1,1   Stable: 48.64  TooDeep:  2.86    Cycle: 48.50        T: 48.62        H: 48.64
+Pattern: 1,0,1,0,1,1,1,1,1   Stable: 25.52  TooDeep:  0.00    Cycle: 74.48        T:  0.00        H: 25.52
 Pattern: 1,0,1,1,1,1,1,1,1   Stable:   100  TooDeep:  0.00    Cycle:  0.00        T:  0.00        H:   100
 Pattern: 1,1,0,0,1,0,0,1,0   Stable:   100  TooDeep:  0.00    Cycle:  0.00        T:   100        H:  0.00
-Pattern: 1,1,0,0,1,1,0,1,1   Stable: 91.20  TooDeep:  0.00    Cycle:  8.80        T: 91.18        H:  0.00
+Pattern: 1,1,0,0,1,1,0,1,1   Stable: 92.38  TooDeep:  0.00    Cycle:  7.62        T: 92.38        H:  0.00
 Pattern: 1,1,1,0,0,0,0,1,0   Stable:   100  TooDeep:  0.00    Cycle:  0.00        T:   100        H:  0.00
 Pattern: 1,1,1,1,0,1,1,0,1   Stable:   100  TooDeep:  0.00    Cycle:  0.00        T:  0.00        H:   100
-Completed test_exampleExercise3n4
+Completed test_exampleExercise 3n4 question
 0 clamp
-Pattern: 0,0,0,0,0,0,1,0,0   Stable:   100  TooDeep:  0.00    Cycle:  0.00        T:   100        H:  0.00
-Pattern: 0,0,0,1,1,1,0,0,0   Stable: 43.48  TooDeep: 15.04    Cycle: 41.48        T: 43.48        H:  0.00
-Pattern: 1,0,0,0,0,1,0,1,0   Stable: 93.30  TooDeep:  0.00    Cycle:  6.70        T: 93.30        H:  0.00
-Pattern: 1,1,1,1,1,1,0,1,1   Stable: 90.28  TooDeep:  0.00    Cycle:  9.72        T: 90.26        H:  0.00
-Pattern: 0,0,0,1,1,1,0,0,1   Stable: 64.20  TooDeep: 24.98    Cycle: 10.82        T: 64.18        H:  0.00
-Pattern: 0,0,0,1,1,1,0,1,1   Stable: 23.60  TooDeep: 32.44    Cycle: 43.96        T: 23.60        H:  0.00
-Pattern: 0,0,1,0,0,1,0,1,1   Stable: 61.64  TooDeep: 15.56    Cycle: 22.80        T: 61.64        H:  0.00
-Pattern: 0,1,0,0,1,0,0,1,1   Stable: 92.90  TooDeep:  0.00    Cycle:  7.10        T: 92.90        H:  0.00
-Pattern: 0,1,0,1,1,1,1,0,0   Stable: 41.56  TooDeep: 15.76    Cycle: 42.68        T: 41.56        H:  0.00
-Pattern: 0,1,1,1,1,0,0,0,0   Stable: 97.58  TooDeep:  0.00    Cycle:  2.42        T: 97.58        H:  0.00
-Pattern: 1,0,1,0,0,0,1,0,0   Stable:   100  TooDeep:  0.00    Cycle:  0.00        T:   100        H:  0.00
-Pattern: 1,0,1,0,1,0,1,1,1   Stable: 62.82  TooDeep: 10.00    Cycle: 27.18        T: 62.82        H:  0.00
-Pattern: 1,0,1,0,1,1,1,1,1   Stable: 61.26  TooDeep: 14.90    Cycle: 23.84        T: 61.26        H:  0.00
-Pattern: 1,0,1,1,1,1,1,1,1   Stable: 24.38  TooDeep: 27.20    Cycle: 48.42        T: 27.20        H:  0.00
-Pattern: 1,1,0,0,1,0,0,1,0   Stable:   100  TooDeep:  0.00    Cycle:  0.00        T:   100        H:  0.00
-Pattern: 1,1,0,0,1,1,0,1,1   Stable: 92.06  TooDeep:  0.00    Cycle:  7.94        T: 92.06        H:  0.00
-Pattern: 1,1,1,0,0,0,0,1,0   Stable:   100  TooDeep:  0.00    Cycle:  0.00        T:   100        H:  0.00
-Pattern: 1,1,1,1,0,1,1,0,1   Stable: 41.74  TooDeep: 23.16    Cycle: 35.10        T: 41.74        H:  0.00
-Completed test_exampleExercise3n4
+Pattern: 0,0,0,0,0,0,1,0,0   Stable:  0.00  TooDeep:  0.00    Cycle:   100        T:  0.00        H:  0.00
+Pattern: 0,0,0,1,1,1,0,0,0   Stable: 48.60  TooDeep:  3.54    Cycle: 47.86        T:  0.00        H:  0.00
+Pattern: 1,0,0,0,0,1,0,1,0   Stable: 93.68  TooDeep:  0.00    Cycle:  6.32        T:  0.00        H:  0.00
+Pattern: 1,1,1,1,1,1,0,1,1   Stable:  0.00  TooDeep:  0.00    Cycle:   100        T:  0.00        H:  0.00
+Pattern: 0,0,0,1,1,1,0,0,1   Stable: 93.84  TooDeep:  0.00    Cycle:  6.16        T:  0.00        H:  0.00
+Pattern: 0,0,0,1,1,1,0,1,1   Stable: 30.32  TooDeep:  0.00    Cycle: 69.68        T:  0.00        H:  0.00
+Pattern: 0,0,1,0,0,1,0,1,1   Stable: 48.44  TooDeep:  3.40    Cycle: 48.16        T:  0.00        H:  0.00
+Pattern: 0,1,0,0,1,0,0,1,1   Stable: 93.58  TooDeep:  0.00    Cycle:  6.42        T:  0.00        H:  0.00
+Pattern: 0,1,0,1,1,1,1,0,0   Stable: 63.20  TooDeep:  0.00    Cycle: 36.80        T:  0.00        H:  0.00
+Pattern: 0,1,1,1,1,0,0,0,0   Stable: 30.70  TooDeep:  0.00    Cycle: 69.30        T:  0.00        H:  0.00
+Pattern: 1,0,1,0,0,0,1,0,0   Stable:  0.00  TooDeep:  0.00    Cycle:   100        T:  0.00        H:  0.00
+Pattern: 1,0,1,0,1,0,1,1,1   Stable: 49.14  TooDeep:  2.98    Cycle: 47.88        T:  0.00        H:  0.00
+Pattern: 1,0,1,0,1,1,1,1,1   Stable: 25.44  TooDeep:  0.00    Cycle: 74.56        T:  0.00        H:  0.00
+Pattern: 1,0,1,1,1,1,1,1,1   Stable:   100  TooDeep:  0.00    Cycle:  0.00        T:  0.00        H:  0.00
+Pattern: 1,1,0,0,1,0,0,1,0   Stable:   100  TooDeep:  0.00    Cycle:  0.00        T:  0.00        H:  0.00
+Pattern: 1,1,0,0,1,1,0,1,1   Stable: 92.86  TooDeep:  0.00    Cycle:  7.14        T:  0.00        H:  0.00
+Pattern: 1,1,1,0,0,0,0,1,0   Stable:   100  TooDeep:  0.00    Cycle:  0.00        T:  0.00        H:  0.00
+Pattern: 1,1,1,1,0,1,1,0,1   Stable:   100  TooDeep:  0.00    Cycle:  0.00        T:  0.00        H:  0.00
+Completed test_exampleExercise 3n4 question
 1 clamp
-Pattern: 0,0,0,0,0,0,1,0,0   Stable: 90.14  TooDeep:  0.00    Cycle:  9.86        T:  0.00        H: 90.14
-Pattern: 0,0,0,1,1,1,0,0,0   Stable: 93.74  TooDeep:  0.00    Cycle:  6.26        T:  0.00        H: 93.74
-Pattern: 1,0,0,0,0,1,0,1,0   Stable: 93.44  TooDeep:  0.00    Cycle:  6.56        T:  0.00        H: 93.44
-Pattern: 1,1,1,1,1,1,0,1,1   Stable:   100  TooDeep:  0.00    Cycle:  0.00        T:  0.00        H:   100
-Pattern: 0,0,0,1,1,1,0,0,1   Stable:   100  TooDeep:  0.00    Cycle:  0.00        T:  0.00        H:   100
-Pattern: 0,0,0,1,1,1,0,1,1   Stable:   100  TooDeep:  0.00    Cycle:  0.00        T:  0.00        H:   100
-Pattern: 0,0,1,0,0,1,0,1,1   Stable: 96.84  TooDeep:  0.00    Cycle:  3.16        T:  0.00        H: 96.84
-Pattern: 0,1,0,0,1,0,0,1,1   Stable: 43.18  TooDeep: 15.02    Cycle: 41.80        T:  0.00        H: 43.18
-Pattern: 0,1,0,1,1,1,1,0,0   Stable: 63.28  TooDeep: 12.06    Cycle: 24.66        T:  0.00        H: 63.28
-Pattern: 0,1,1,1,1,0,0,0,0   Stable: 62.02  TooDeep: 15.94    Cycle: 22.04        T:  0.00        H: 62.02
-Pattern: 1,0,1,0,0,0,1,0,0   Stable: 90.62  TooDeep:  0.00    Cycle:  9.38        T:  0.00        H: 90.62
-Pattern: 1,0,1,0,1,0,1,1,1   Stable: 41.76  TooDeep: 14.32    Cycle: 43.92        T:  0.00        H: 41.76
-Pattern: 1,0,1,0,1,1,1,1,1   Stable: 96.92  TooDeep:  0.00    Cycle:  3.08        T:  0.00        H: 96.92
+Pattern: 0,0,0,0,0,0,1,0,0   Stable:  0.00  TooDeep:  0.00    Cycle:   100        T:  0.00        H:  0.00
+Pattern: 0,0,0,1,1,1,0,0,0   Stable: 48.74  TooDeep:  3.60    Cycle: 47.66        T: 48.64        H: 48.74
+Pattern: 1,0,0,0,0,1,0,1,0   Stable: 93.94  TooDeep:  0.00    Cycle:  6.06        T: 93.94        H:  0.00
+Pattern: 1,1,1,1,1,1,0,1,1   Stable:  0.00  TooDeep:  0.00    Cycle:   100        T:  0.00        H:  0.00
+Pattern: 0,0,0,1,1,1,0,0,1   Stable: 93.84  TooDeep:  0.00    Cycle:  6.16        T:  0.00        H: 93.84
+Pattern: 0,0,0,1,1,1,0,1,1   Stable: 30.52  TooDeep:  0.00    Cycle: 69.48        T:  0.00        H: 30.52
+Pattern: 0,0,1,0,0,1,0,1,1   Stable: 48.60  TooDeep:  3.24    Cycle: 48.16        T: 48.60        H: 48.58
+Pattern: 0,1,0,0,1,0,0,1,1   Stable: 93.16  TooDeep:  0.00    Cycle:  6.84        T: 93.16        H:  0.00
+Pattern: 0,1,0,1,1,1,1,0,0   Stable: 63.48  TooDeep:  0.00    Cycle: 36.52        T:  0.00        H: 63.48
+Pattern: 0,1,1,1,1,0,0,0,0   Stable: 32.58  TooDeep:  0.00    Cycle: 67.42        T: 32.58        H:  0.00
+Pattern: 1,0,1,0,0,0,1,0,0   Stable:  0.00  TooDeep:  0.00    Cycle:   100        T:  0.00        H:  0.00
+Pattern: 1,0,1,0,1,0,1,1,1   Stable: 48.52  TooDeep:  2.98    Cycle: 48.50        T: 48.52        H: 48.46
+Pattern: 1,0,1,0,1,1,1,1,1   Stable: 24.02  TooDeep:  0.00    Cycle: 75.98        T:  0.00        H: 24.02
 Pattern: 1,0,1,1,1,1,1,1,1   Stable:   100  TooDeep:  0.00    Cycle:  0.00        T:  0.00        H:   100
-Pattern: 1,1,0,0,1,0,0,1,0   Stable: 63.08  TooDeep: 25.68    Cycle: 11.24        T:  0.00        H: 63.06
-Pattern: 1,1,0,0,1,1,0,1,1   Stable: 96.80  TooDeep:  0.00    Cycle:  3.20        T:  0.00        H: 96.80
-Pattern: 1,1,1,0,0,0,0,1,0   Stable: 64.56  TooDeep: 24.80    Cycle: 10.64        T:  0.00        H: 24.80
+Pattern: 1,1,0,0,1,0,0,1,0   Stable:   100  TooDeep:  0.00    Cycle:  0.00        T:   100        H:  0.00
+Pattern: 1,1,0,0,1,1,0,1,1   Stable: 91.58  TooDeep:  0.00    Cycle:  8.42        T: 91.58        H:  0.00
+Pattern: 1,1,1,0,0,0,0,1,0   Stable:   100  TooDeep:  0.00    Cycle:  0.00        T:   100        H:  0.00
 Pattern: 1,1,1,1,0,1,1,0,1   Stable:   100  TooDeep:  0.00    Cycle:  0.00        T:  0.00        H:   100
-Completed test_exampleExercise3n4
+Completed test_exampleExercise 3n4 question
+No clamp
+Pattern: 0,1,1,0,0,0,0,0,0   Stable:   100  TooDeep:  0.00    Cycle:  0.00        T:   100        H:  0.00
+Pattern: 1,1,1,0,0,1,1,1,1   Stable: 31.84  TooDeep:  0.00    Cycle: 68.16        T:  0.00        H: 31.84
+Completed test_exampleExercise No.1 Answer
+0 clamp
+Now: 1,0,1,0,0,0,0,1,0
+Now: 1,1,1,0,0,0,0,1,0
+Now: 1,1,1,0,0,0,0,1,0
+Pattern: 1,0,1,0,0,0,0,1,0   Stable:   100  TooDeep:  0.00    Cycle:  0.00        T:  0.00        H:  0.00
+Completed test_exampleExercise No.4 Answer
 $

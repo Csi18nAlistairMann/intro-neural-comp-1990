@@ -24,7 +24,11 @@ define("STMS_INIT_VALS", 503);
 define("PASSES", 5000);
 // Maximum cycles to wait for resolution to happen
 define("HARDLOOPLIMIT", 6);
-
+//
+// Test to distinguish calls
+define("NO3N4QUESTION", "3n4 question");
+define("NO1ANSWER", "No.1 Answer");
+define("NO4ANSWER", "No.4 Answer");
 //
 // Termination conditions for exercises 3 and 4
 // T
@@ -35,10 +39,39 @@ define("TESTExercise3n403c", " 010\n");
 define("TESTExercise3n404a", " 101 \n");
 define("TESTExercise3n404b", " 111 \n");
 define("TESTExercise3n404c", " 101\n");
+//
+//
+define("C1EX3N4SET",  [[0, 0, 0, 0, 0, 0, 1, 0, 0],
+                       [0, 0, 0, 1, 1, 1, 0, 0, 0],
+                       [1, 0, 0, 0, 0, 1, 0, 1, 0],
+                       [1, 1, 1, 1, 1, 1, 0, 1, 1],
+
+                       [0, 0, 0, 1, 1, 1, 0, 0, 1],
+                       [0, 0, 0, 1, 1, 1, 0, 1, 1],
+                       [0, 0, 1, 0, 0, 1, 0, 1, 1],
+                       [0, 1, 0, 0, 1, 0, 0, 1, 1],
+                       [0, 1, 0, 1, 1, 1, 1, 0, 0],
+                       [0, 1, 1, 1, 1, 0, 0, 0, 0],
+
+                       [1, 0, 1, 0, 0, 0, 1, 0, 0],
+                       [1, 0, 1, 0, 1, 0, 1, 1, 1],
+                       [1, 0, 1, 0, 1, 1, 1, 1, 1],
+                       [1, 0, 1, 1, 1, 1, 1, 1, 1],
+                       [1, 1, 0, 0, 1, 0, 0, 1, 0],
+                       [1, 1, 0, 0, 1, 1, 0, 1, 1],
+                       [1, 1, 1, 0, 0, 0, 0, 1, 0],
+                       [1, 1, 1, 1, 0, 1, 1, 0, 1]]);
+
+define("C1EXA1SET", [[0, 1, 1, 0, 0, 0, 0, 0, 0],
+                     [1, 1, 1, 0, 0, 1, 1, 1, 1]]);
+
+define("C1EXA4SET", [[1, 0, 1, 0, 0, 0, 0, 1, 0]]);
+
+define("C1EXA4BUG", [[0,0,0,0,0,0,1,0,0]]);
 
 //
 // Setup the network
-function test_exampleExercise3n4($clamped) {
+function test_exampleExercise($startingSets, $clamped, $which) {
     //
     // Set up TANs to have taught set as provided by T and H
     $tan11 = new ToyAdaptiveNode_test_18;
@@ -99,46 +132,24 @@ function test_exampleExercise3n4($clamped) {
     // Exercise invites us to use no clamp, clamped to 0, and clamped to 1
     if ($clamped === UNCLAMPED) {
         echo "No clamp\n";
-        $tan31->setClampedValue(UNCLAMPED);
+        $tan22->setClampedValue(UNCLAMPED);
     } else if ($clamped === CLAMPED0) {
         echo "0 clamp\n";
-        $tan31->setClampedValue(CLAMPED0);
+        $tan22->setClampedValue(CLAMPED0);
     } else if ($clamped === CLAMPED1) {
         echo "1 clamp\n";
-        $tan31->setClampedValue(CLAMPED1);
+        $tan22->setClampedValue(CLAMPED1);
     }
 
-    //
-    // Same starting set given on p16, second and third set match those
-    // I used for Exercise 2
-    $startingSets = [[0, 0, 0, 0, 0, 0, 1, 0, 0],
-                     [0, 0, 0, 1, 1, 1, 0, 0, 0],
-                     [1, 0, 0, 0, 0, 1, 0, 1, 0],
-                     [1, 1, 1, 1, 1, 1, 0, 1, 1],
+    $show_work = ($which === NO4ANSWER) ? true : false;
 
-                     [0, 0, 0, 1, 1, 1, 0, 0, 1],
-                     [0, 0, 0, 1, 1, 1, 0, 1, 1],
-                     [0, 0, 1, 0, 0, 1, 0, 1, 1],
-                     [0, 1, 0, 0, 1, 0, 0, 1, 1],
-                     [0, 1, 0, 1, 1, 1, 1, 0, 0],
-                     [0, 1, 1, 1, 1, 0, 0, 0, 0],
-
-                     [1, 0, 1, 0, 0, 0, 1, 0, 0],
-                     [1, 0, 1, 0, 1, 0, 1, 1, 1],
-                     [1, 0, 1, 0, 1, 1, 1, 1, 1],
-                     [1, 0, 1, 1, 1, 1, 1, 1, 1],
-                     [1, 1, 0, 0, 1, 0, 0, 1, 0],
-                     [1, 1, 0, 0, 1, 1, 0, 1, 1],
-                     [1, 1, 1, 0, 0, 0, 0, 1, 0],
-                     [1, 1, 1, 1, 0, 1, 1, 0, 1]];
-
-    runNetwork($startingSets, $tanlist);
-    echo "Completed " . __FUNCTION__ . "\n";
+    runNetwork($startingSets, $tanlist, $show_work);
+    echo "Completed " . __FUNCTION__ . " " . $which . "\n";
 }
 
 //
 // Actually run the network and aggregate statistics over multiple passes
-function runNetwork($startingSets, $tanlist) {
+function runNetwork($startingSets, $tanlist, $show_work) {
     foreach ($startingSets as $initialVals) {
         // Test each starting set several times in turn
 
@@ -169,6 +180,8 @@ function runNetwork($startingSets, $tanlist) {
                 $stms[] = $tan->getF(__FUNCTION__);
             }
             $stmsHistory[] = $stms;
+            if ($show_work)
+                showPatternKwik($stms);
 
             do {
                 // Run the network at least once and until finished, either by
@@ -187,6 +200,8 @@ function runNetwork($startingSets, $tanlist) {
                     $stms[] = $tan->getF(__FUNCTION__);
                 }
                 $stmsHistory[] = $stms;
+                if ($show_work)
+                    showPatternKwik($stms);
 
                 //
                 // Now check for termination
@@ -215,6 +230,9 @@ function runNetwork($startingSets, $tanlist) {
                     }
                 }
             } while ($finished === false);
+            //
+            // Answer 4 just show the working for the first pass
+            $show_work = false;
 
             //
             // Record why we finished, and whether we finished on a
@@ -231,6 +249,10 @@ function runNetwork($startingSets, $tanlist) {
         reportOneLine($localResult);
 
     } // now look to check the next pattern
+}
+
+function showPatternKwik($stms) {
+    echo "Now: " . implode(",", $stms) . "\n";
 }
 
 //
@@ -294,8 +316,16 @@ function alignNumber($num, $len) {
 
 //
 // Exercise says to test things three ways
-test_exampleExercise3n4(UNCLAMPED);
-test_exampleExercise3n4(CLAMPED0);
-test_exampleExercise3n4(CLAMPED1);
+test_exampleExercise(C1EX3N4SET, UNCLAMPED, NO3N4QUESTION);
+test_exampleExercise(C1EX3N4SET, CLAMPED0, NO3N4QUESTION);
+test_exampleExercise(C1EX3N4SET, CLAMPED1, NO3N4QUESTION);
+test_exampleExercise(C1EXA1SET, UNCLAMPED, NO1ANSWER);
+test_exampleExercise(C1EXA4SET, CLAMPED0, NO4ANSWER);
+
+//
+// Looking for source of error, used this to explore how clamping
+// was going wrong. Clamping TAN31 per C1S9, not TAN22 per the
+// exercises. Duh
+// test_exampleExercise(C1EXA4BUG, CLAMPED0, NO4ANSWER);
 
 ?>
