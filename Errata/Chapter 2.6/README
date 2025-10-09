@@ -1,0 +1,77 @@
+Chapter 2.6 presents unsatisfactory coverage of the algebra involved in the
+learning rule culminating in Table 2.1 which contains elements at odds with
+the text.
+
+As example to the latter, on page 32 we read: "Assume the initial test
+column is x1, x2: 0, 0. This has F = 0 where it should be F = 1. ... 0 > T is
+interpreted as requiring a target for T to change from +0.1 to 0 - e, that is
+to -0.1. The total target change is -0.2 which when multiplied by d (0.5) gives
+an actual change of -0.1 giving a new value for T, that is, 0."
+
+Table 2.1 repeats the outcome for the above on it's top row of data but under
+"Correction factor (E + e) / 2" offers the correction is "0.1" not "-0.1" per
+the text. That is, some of those figures may be missing their sign.
+
+In addition, rows appear to be missing down the left: 0,0 / 0,1 should be
+followed by 1,0 before the third row of 1,1. There are eight such missing rows.
+
+The weights and threshold also appear to change their equation depending on
+whether the Error E column - which has had its signs removed - is negative or
+not.
+
+The Correction factor column only makes sense if the Error E column does have
+its signs removed, that is, if each cell is abs(Error E).
+
+The label for Table 2.1 mentions "training of the MCR node." This is probably
+a mistake for MCP (McCulloch and Pitts.) While there is reference to MCR in
+neural network literature, it appears to start with a 2014 paper - too late
+to be in this book.
+
+I have uploaded a correction to Table 2.1 called "Table 2.1 corrected.ods"
+to assist. Note:
+1. I've added the missing rows: they were missing because the represent
+checks where the bit in question was correct, so no error correction was
+required.
+2. I've added three columns at left detailing the firing of the node at that
+moment, along with the target firing as a header; second to indicate which
+bit is being tested (BL, TL, BR, TR per figure 2.5); and a note on how that
+bit would need to be corrected.
+3. The formulae used in each cell is accessible throught CTRL-` on Libreoffice
+however I also cover them here:
+
+Column F "Error E"
+=D3*I2+E3*J2-1*K2	D3 = 0 or 1, and is X1
+			I2 = W1
+			E3 = 0 or 1, and is X2
+			J2 = W2
+			K2 = Previous threshold
+That is, multiply each weight by the input, sum them, and subtract the
+previous threshold
+
+Column G "abs(E)"
+=ABS(F3)		F3 = Error E above, forced to positive
+
+Column H "Correction Factor (E+e)/2"
+=(G3+0.1)/2		G3 = Error E, forced to positive, added to 0.1 (e as
+			defined on page 32 "we let e = 0.1") and then divided
+			by 2. (That is, multiplied by d = 0.5 also defined on
+			page 32.)
+
+Note the weights and threshold below perform a different equation depending
+on if the Error E is negative or not. The weights will tend to increase towards
+a falling threshold, and decrease towards a rising threshold.
+
+Column I "New W1"
+=IF(F6 < 0, I2+H6, I2-H6)	F6 = the Error E before the sign is removed
+				I2 = Previous weight W1
+				H6 = Correction factor as noted above
+
+Column J "New W2"
+=IF(F4 < 0, J2+H4, J2-H4)	F4 = the Error E before the sign is removed
+				J2 = Previous weight W2
+				H4 = Correction factor as noted above
+
+Column K "New T"
+=IF(F3 < 0, K2-H3, K2+H3)	F4 = the Error E before the sign is removed
+				K2 = Previous Threshold
+				H3 = Correction factor as noted above
