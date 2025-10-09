@@ -259,6 +259,11 @@ Completed test_exampleExercise No.1 Answer
 Now: 1,0,1,0,0,0,0,1,0
 Now: 1,1,1,0,0,0,0,1,0
 Now: 1,1,1,0,0,0,0,1,0
+Answer 4 cycle:
+Run no: 0
+101 111 111
+000 000 000
+010 010 010
 Pattern: 1,0,1,0,0,0,0,1,0   Stable:   100  TooDeep:  0.00    Cycle:  0.00        T:  0.00        H:  0.00
 Completed test_exampleExercise No.4 Answer
 $

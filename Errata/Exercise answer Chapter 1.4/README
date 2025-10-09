@@ -1,0 +1,18 @@
+The answer offers "For example the following cycle occurs around the T
+prototype:
+
+101 111 101 111
+000 000 000 000
+010 010 000 000"
+
+My software gives the cycle as instead:
+
+101 111 111
+000 000 000
+010 010 010
+
+a. That TAN12 is to be a 0 in the third stms on inputs 1110 is contrary to the
+p14 truth table.
+
+b. That TAN32 is to be a 0 in the third stms on inputs 0001 is also contrary
+to the p14 truth table.

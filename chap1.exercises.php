@@ -232,7 +232,12 @@ function runNetwork($startingSets, $tanlist, $show_work) {
             } while ($finished === false);
             //
             // Answer 4 just show the working for the first pass
-            $show_work = false;
+            if ($show_work === true) {
+                $msh = new MemoryStatesHandler([$stmsHistory]);
+                echo "Answer 4 cycle:\n";
+                echo $msh->getReadOut_c1s8();
+                $show_work = false;
+            }
 
             //
             // Record why we finished, and whether we finished on a
